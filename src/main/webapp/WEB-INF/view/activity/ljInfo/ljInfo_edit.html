@@ -1,0 +1,33 @@
+@layout("/common/_container.html"){
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div class="form-horizontal">
+
+            <div class="row">
+                <div class="col-sm-6 b-r">
+                            <#input id="id" name="" value="${item.id}" underline="true"/>
+                            <#input id="name" name="领取人" value="${item.name}" underline="true"/>
+                            <#input id="rewardtype" name="领取类型（0一等奖 1二等奖 2三等奖 3四等奖）" value="${item.rewardtype}" underline="true"/>
+                            <#input id="address" name="领取人地址" value="${item.address}" />
+                </div>
+
+                <div class="col-sm-6">
+                            <#input id="phone" name="领取人电话" value="${item.phone}" underline="true"/>
+                            <#input id="createtime" name="创建时间" value="${item.createtime}" underline="true"/>
+                            <#input id="isdeal" name="是否处理" value="${item.isdeal}" underline="true"/>
+                            <#input id="updatetime" name="发货时间" value="${item.updatetime}" />
+                </div>
+            </div>
+
+            <div class="row btn-group-m-t">
+                <div class="col-sm-10">
+                    <#button btnCss="info" name="提交" id="ensure" icon="fa-check" clickFun="LjInfoInfoDlg.editSubmit()"/>
+                    <#button btnCss="danger" name="取消" id="cancel" icon="fa-eraser" clickFun="LjInfoInfoDlg.close()"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/activity/ljInfo/ljInfo_info.js"></script>
+@}

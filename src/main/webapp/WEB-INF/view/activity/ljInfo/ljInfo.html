@@ -1,0 +1,43 @@
+@layout("/common/_container.html"){
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>ckac管理</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <#NameCon id="condition" name="电话" />
+                            </div>
+                        <div class="col-sm-2">
+                            <#SelectCon id="isdeal" name="领取类型">
+                            <option value="-1">全部</option>
+                            <option value="0">未领取</option>
+                            <option value="1">已领取</option>
+                        </#SelectCon>
+                    </div>
+                            <div class="col-sm-3">
+                                <#button name="搜索" icon="fa-search" clickFun="LjInfo.search()"/>
+                            </div>
+                        </div>
+                        <div class="hidden-xs" id="LjInfoTableToolbar" role="group">
+                            @if(shiro.hasPermission("/ljInfo/add")){
+                                <#button name="添加" icon="fa-plus" clickFun="LjInfo.openAddLjInfo()"/>
+                            @}
+                            @if(shiro.hasPermission("/ljInfo/update")){
+                                <#button name="修改" icon="fa-edit" clickFun="LjInfo.openLjInfoDetail()" space="true"/>
+                            @}
+                                <#button name="更改处理类型" icon="fa-plus" clickFun="LjInfo.delete()" space="true"/>
+                        </div>
+                        <#table id="LjInfoTable"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/activity/ljInfo/ljInfo.js"></script>
+@}
