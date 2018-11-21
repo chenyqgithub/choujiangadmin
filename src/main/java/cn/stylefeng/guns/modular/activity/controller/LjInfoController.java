@@ -1,7 +1,9 @@
 package cn.stylefeng.guns.modular.activity.controller;
 
+import cn.stylefeng.guns.core.util.HttpUtils;
 import cn.stylefeng.roses.core.base.controller.BaseController;
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,10 @@ import cn.stylefeng.guns.core.log.LogObjectHolder;
 import org.springframework.web.bind.annotation.RequestParam;
 import cn.stylefeng.guns.modular.system.model.LjInfo;
 import cn.stylefeng.guns.modular.activity.service.ILjInfoService;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * ckac控制器
@@ -63,6 +69,7 @@ public class LjInfoController extends BaseController {
     @ResponseBody
     public Object list(String condition,Integer isdeal) {
         EntityWrapper<LjInfo> ljInfoEntityWrapper = new EntityWrapper<>();
+        ljInfoEntityWrapper.in("rewardtype","0,1,2");
         if(!StringUtils.isEmpty(condition)){
             ljInfoEntityWrapper.like("phone",condition);
         }
@@ -94,6 +101,8 @@ public class LjInfoController extends BaseController {
             Integer isdeal = ljInfo.getIsdeal();
             if(isdeal==0){
                 ljInfo.setIsdeal(1);
+                SimpleDateFormat s=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                ljInfo.setUpdatetime(s.format(new Date()));
             }else {
                 ljInfo.setIsdeal(0);
             }
@@ -119,5 +128,12 @@ public class LjInfoController extends BaseController {
     @ResponseBody
     public Object detail(@PathVariable("ljInfoId") Integer ljInfoId) {
         return ljInfoService.selectById(ljInfoId);
+    }
+
+    @RequestMapping(value = "/findData")
+    @ResponseBody
+    public Object findData(){
+        String result =HttpUtils.sendPost("https://hybc.ikeek.cn:8443/api/code/getResultInfo", new HashMap<>());
+       return JSON.parse(result);
     }
 }

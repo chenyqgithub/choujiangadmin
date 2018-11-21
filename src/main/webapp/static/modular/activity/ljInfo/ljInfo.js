@@ -46,7 +46,7 @@ LjInfo.initColumn = function () {
                 }
             }
         },
-        {title: '发货时间', field: 'updatetime', visible: true, align: 'center', valign: 'middle'}
+        {title: '处理时间', field: 'updatetime', visible: true, align: 'center', valign: 'middle'}
     ];
 };
 
@@ -110,6 +110,19 @@ LjInfo.delete = function () {
         ajax.set("ljInfoId", this.seItem.id);
         ajax.start();
     }
+};
+LjInfo.refresh = function () {
+        var ajax = new $ax(Feng.ctxPath + "/ljInfo/findData", function (data) {
+
+            $("#one").html(data.one);
+            $("#two").html(data.two);
+            $("#three").html(data.three);
+            $("#four").html(data.four);
+            Feng.success("刷新成功!");
+        }, function (data) {
+            Feng.error("刷新失败!" + data.responseJSON.message + "!");
+        });
+        ajax.start();
 };
 
 /**
