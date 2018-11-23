@@ -77,6 +77,7 @@ public class LjInfoController extends BaseController {
     public Object list(String condition,Integer isdeal) {
         EntityWrapper<LjInfo> ljInfoEntityWrapper = new EntityWrapper<>();
         ljInfoEntityWrapper.in("rewardtype","0,1,2");
+        ljInfoEntityWrapper.orderBy("createtime",false);
         if(!StringUtils.isEmpty(condition)){
             ljInfoEntityWrapper.like("phone",condition);
         }
