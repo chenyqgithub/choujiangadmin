@@ -134,6 +134,9 @@ LjInfo.search = function () {
     queryData['isdeal'] = $("#isdeal").val();
     LjInfo.table.refresh({query: queryData});
 };
+LjInfo.excel = function () {
+    window.location.href=Feng.ctxPath +"/ljInfo/export_excel";
+};
 
 $(function () {
     var defaultColunms = LjInfo.initColumn();

@@ -5,6 +5,10 @@ import cn.stylefeng.roses.core.base.controller.BaseController;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import org.apache.poi.ss.util.CellUtil;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import cn.stylefeng.guns.modular.system.model.LjInfo;
 import cn.stylefeng.guns.modular.activity.service.ILjInfoService;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * ckac控制器
@@ -135,5 +142,81 @@ public class LjInfoController extends BaseController {
     public Object findData(){
         String result =HttpUtils.sendPost("https://hybc.ikeek.cn:8443/api/code/getResultInfo", new HashMap<>());
        return JSON.parse(result);
+    }
+
+    /**
+     * 数据导出
+     * @param response
+     * @param request
+     * @throws Exception
+     */
+    @RequestMapping("export_excel")
+    public void export(HttpServletResponse response, HttpServletRequest request) throws Exception {
+        List<Map<String, Object>> memberExcels = new ArrayList<>();
+        EntityWrapper<LjInfo> ljInfoEntityWrapper = new EntityWrapper<>();
+        ljInfoEntityWrapper.in("rewardtype","0,1,2");
+        List<LjInfo> ljInfos = ljInfoService.selectList(ljInfoEntityWrapper);
+        for (LjInfo m : ljInfos) {
+            Map<String, Object> mMap = new LinkedHashMap<>();
+            mMap.put("name", m.getName());
+            mMap.put("phone", m.getPhone());
+            mMap.put("address", m.getAddress());
+            mMap.put("createtime", m.getCreatetime());
+            mMap.put("rewardtype", m.getRewardtype()==0?"一等奖":m.getRewardtype()==1?"二等奖":"三等奖");
+            mMap.put("isdeal", m.getIsdeal()==0?"否":"是");
+            mMap.put("updatetime", m.getUpdatetime());
+            memberExcels.add(mMap);
+        }
+        SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(100);
+        SXSSFSheet sxssfSheet = sxssfWorkbook.createSheet();
+        Map<String, Object> mapTile = memberExcels.get(0);
+        //创建excel 数据列名
+        SXSSFRow rowTitle = sxssfSheet.createRow(0);
+        Integer j = 0;
+        for (Map.Entry<String, Object> entry : mapTile.entrySet()) {
+            if (entry.getKey().equals("name")) {
+                CellUtil.createCell(rowTitle, j, "姓名");
+            } else if (entry.getKey().equals("phone")) {
+                CellUtil.createCell(rowTitle, j, "联系电话");
+            }  else if (entry.getKey().equals("address")) {
+                CellUtil.createCell(rowTitle, j, "联系地址");
+            }else if (entry.getKey().equals("createtime")) {
+                CellUtil.createCell(rowTitle, j, "抽奖时间");
+            }  else if (entry.getKey().equals("rewardtype")) {
+                CellUtil.createCell(rowTitle, j, "奖励类型");
+            }else if (entry.getKey().equals("isdeal")) {
+                CellUtil.createCell(rowTitle, j, "是否处理");
+            }else if (entry.getKey().equals("updatetime")) {
+                CellUtil.createCell(rowTitle, j, "处理时间");
+            }
+            j++;
+        }
+        for (int i = 0; i < memberExcels.size(); i++) {
+            Map<String, Object> nMap = memberExcels.get(i);
+            SXSSFRow row = sxssfSheet.createRow(i + 1);
+            // 数据
+            Integer k = 0;
+            for (Map.Entry<String, Object> ma : nMap.entrySet()) {
+                String value = "";
+                if (ma.getValue() != null) {
+                    value = ma.getValue().toString();
+                }
+                CellUtil.createCell(row, k, value);
+                k++;
+            }
+        }
+        response.setHeader("content-Type", "application/vnc.ms-excel;charset=utf-8");
+        //文件名使用uuid，避免重复
+        response.setHeader("Content-Disposition", "attachment;filename=" + "中奖信息" + ".xlsx");
+        response.setCharacterEncoding("UTF-8");
+        ServletOutputStream outputStream = response.getOutputStream();
+        try {
+            sxssfWorkbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            memberExcels.clear();
+            outputStream.close();
+        }
     }
 }

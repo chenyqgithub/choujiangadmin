@@ -37,7 +37,8 @@
                             @if(shiro.hasPermission("/ljInfo/update")){
                                 <#button name="修改" icon="fa-edit" clickFun="LjInfo.openLjInfoDetail()" space="true"/>
                             @}
-                                <#button name="更改处理类型" icon="fa-plus" clickFun="LjInfo.delete()" space="true"/>
+                                <#button name="更改处理类型" icon="fa-edit" clickFun="LjInfo.delete()" space="true"/>
+                            <#button name="导出excel" icon="fa-plus" clickFun="LjInfo.excel()"/>
                         </div>
                         <#table id="LjInfoTable"/>
                     </div>
