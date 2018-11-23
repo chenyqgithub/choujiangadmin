@@ -40,9 +40,8 @@ log:
 spring:
   profiles: local
   datasource:
-    url: jdbc:mysql://47.104.252.44:3306/cj?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=CTT
+    url: jdbc:mysql://47.104.252.4:3306/cj?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=CTT
     username: root
-    password: Cdxxkj@123
     db-name: cj
     filters: wall,mergeStat
 
@@ -50,9 +49,8 @@ spring:
 guns:
   muti-datasource:
     open: false
-    url: jdbc:mysql://47.104.252.44:3306/cj?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=CTT
+    url: jdbc:mysql://47.104.252.4:3306/cj?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&serverTimezone=CTT
     username: root
-    password: Cdxxkj@123
     dataSourceNames:
     - dataSourceGuns
     - dataSourceBiz
